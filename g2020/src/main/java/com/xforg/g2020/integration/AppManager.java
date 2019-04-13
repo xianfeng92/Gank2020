@@ -1,4 +1,3 @@
-
 package com.xforg.g2020.integration;
 
 import android.app.Activity;
@@ -11,14 +10,12 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.View;
-
+import com.xforg.g2020.base.delegate.AppLifecycles;
 import com.xforg.g2020.utils.ArmsUtils;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;

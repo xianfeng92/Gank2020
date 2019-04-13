@@ -1,4 +1,3 @@
-
 package com.xforg.g2020.utils;
 
 import com.trello.rxlifecycle2.LifecycleTransformer;
@@ -10,7 +9,6 @@ import com.xforg.g2020.integration.lifecycles.ActivityLifecycleable;
 import com.xforg.g2020.integration.lifecycles.FragmentLifecycleable;
 import com.xforg.g2020.integration.lifecycles.Lifecycleable;
 import com.xforg.g2020.mvp.IView;
-
 import io.reactivex.annotations.NonNull;
 
 /**

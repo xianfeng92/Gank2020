@@ -1,4 +1,3 @@
-
 package com.xforg.g2020.utils;
 
 import android.app.Activity;
@@ -9,14 +8,11 @@ import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
-
 import com.zhy.autolayout.AutoFrameLayout;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
 import static com.xforg.g2020.base.Platform.DEPENDENCY_AUTO_LAYOUT;
 import static com.xforg.g2020.base.delegate.ActivityDelegate.LAYOUT_FRAMELAYOUT;
 import static com.xforg.g2020.base.delegate.ActivityDelegate.LAYOUT_LINEARLAYOUT;

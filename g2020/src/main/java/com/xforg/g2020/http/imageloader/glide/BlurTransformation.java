@@ -1,4 +1,3 @@
-
 package com.xforg.g2020.http.imageloader.glide;
 
 import android.graphics.Bitmap;

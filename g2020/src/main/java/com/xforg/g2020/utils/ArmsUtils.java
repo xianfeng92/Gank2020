@@ -1,4 +1,3 @@
-
 package com.xforg.g2020.utils;
 
 import android.app.Activity;
