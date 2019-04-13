@@ -3,7 +3,6 @@ package com.xforg.g2020.di.component;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-
 import com.google.gson.Gson;
 import com.xforg.g2020.base.delegate.AppDelegate;
 import com.xforg.g2020.di.module.AppModule;
@@ -15,12 +14,9 @@ import com.xforg.g2020.integration.AppManager;
 import com.xforg.g2020.integration.ConfigModule;
 import com.xforg.g2020.integration.IRepositoryManager;
 import com.xforg.g2020.integration.cache.Cache;
-
 import java.io.File;
 import java.util.concurrent.ExecutorService;
-
 import javax.inject.Singleton;
-
 import dagger.BindsInstance;
 import dagger.Component;
 import me.jessyan.rxerrorhandler.core.RxErrorHandler;

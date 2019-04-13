@@ -1,12 +1,10 @@
 package com.xforg.gank2020.mvp.ui.adapter;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.xforg.g2020.di.component.AppComponent;
 import com.xforg.g2020.http.imageloader.ImageLoader;
-import com.xforg.g2020.http.imageloader.glide.GlideImageLoaderStrategy;
 import com.xforg.g2020.http.imageloader.glide.ImageConfigImpl;
 import com.xforg.g2020.utils.ArmsUtils;
 import com.xforg.gank2020.R;
@@ -31,10 +29,6 @@ public class UserAdapter extends BaseQuickAdapter<User, BaseViewHolder> {
     protected void convert(BaseViewHolder helper, User item) {
         mAppComponent = ArmsUtils.obtainAppComponentFromContext(mContext);
         mImageLoader = mAppComponent.imageLoader();
-        if (mImageLoader.getLoadImgStrategy() == null){
-            Log.d(TAG, "convert: mImageLoader.getLoadImgStrategy() == null");
-            mImageLoader.setLoadImgStrategy(new GlideImageLoaderStrategy());
-        }
         mImageLoader.loadImage(mContext,
                 ImageConfigImpl
                         .builder()
