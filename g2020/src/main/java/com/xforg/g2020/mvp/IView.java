@@ -3,17 +3,12 @@ package com.xforg.g2020.mvp;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-
 import com.xforg.g2020.utils.ArmsUtils;
-
 import static com.xforg.g2020.utils.Preconditions.checkNotNull;
 
 /**
  * ================================================
  * 框架要求框架中的每个 View 都需要实现此类, 以满足规范
- * <p>
- * 为了满足部分人的诉求以及向下兼容, {@link IView} 中的部分方法使用 JAVA 1.8 的默认方法实现, 这样实现类可以按实际需求选择是否实现某些方法
- * 不实现则使用默认方法中的逻辑, 不清楚默认方法的请自行学习
  * ================================================
  */
 public interface IView {

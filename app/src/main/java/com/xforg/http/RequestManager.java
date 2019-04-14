@@ -139,6 +139,7 @@ public class RequestManager {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        Logger.d("onFailure");
                         callBack.onFailure(e.getLocalizedMessage());
                     }
                 });

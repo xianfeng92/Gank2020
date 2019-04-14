@@ -9,11 +9,9 @@ import android.arch.lifecycle.OnLifecycleEvent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.SupportActivity;
 import android.view.View;
-
 import com.trello.rxlifecycle2.RxLifecycle;
 import com.xforg.g2020.integration.EventBusManager;
 import com.xforg.g2020.utils.Preconditions;
-
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;

@@ -1,6 +1,7 @@
 package com.xforg.gank2020.activitis;
 
 import android.animation.Animator;
+import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,8 +12,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -25,8 +29,8 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.IIcon;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.squareup.picasso.Picasso;
+import com.xforg.g2020.base.BaseActivity;
 import com.xforg.gank2020.R;
-import com.xforg.gank2020.base.BaseActivity;
 import com.xforg.gank2020.beans.GanHuo;
 import com.xforg.gank2020.event.SkinChangeEvent;
 import com.xforg.gank2020.fragment.AllFragment;
@@ -50,7 +54,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class MainActivity extends BaseActivity implements ColorChooserDialog.ColorCallback {
+public class MainActivity extends AppCompatActivity implements ColorChooserDialog.ColorCallback {
 
     @BindView(R.id.avatar)
     ImageView mAvatar;
@@ -85,6 +89,10 @@ public class MainActivity extends BaseActivity implements ColorChooserDialog.Col
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        onPreCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -146,10 +154,6 @@ public class MainActivity extends BaseActivity implements ColorChooserDialog.Col
             }
         });
 
-//        if (PreferencesUtils.getBoolean(this, "isFirst", true)) {
-//            mResideLayout.openPane();
-//            PreferencesUtils.putBoolean(this, "isFirst", false);
-//        }
         mIcon.setImageDrawable(new IconicsDrawable(this).color(Color.WHITE).icon(MaterialDesignIconic.Icon.gmi_view_comfy).sizeDp(20));
         mTitle.setText("干货集中营");
         switchFragment("all");
@@ -402,5 +406,81 @@ public class MainActivity extends BaseActivity implements ColorChooserDialog.Col
                 }
             }).start();
         }
+    }
+
+    private void onPreCreate() {
+        Theme theme = PreUtils.getCurrentTheme(this);
+        switch (theme) {
+            case Blue:
+                setTheme(R.style.BlueTheme);
+                break;
+            case Red:
+                setTheme(R.style.RedTheme);
+                break;
+            case Brown:
+                setTheme(R.style.BrownTheme);
+                break;
+            case Green:
+                setTheme(R.style.GreenTheme);
+                break;
+            case Purple:
+                setTheme(R.style.PurpleTheme);
+                break;
+            case Teal:
+                setTheme(R.style.TealTheme);
+                break;
+            case Pink:
+                setTheme(R.style.PinkTheme);
+                break;
+            case DeepPurple:
+                setTheme(R.style.DeepPurpleTheme);
+                break;
+            case Orange:
+                setTheme(R.style.OrangeTheme);
+                break;
+            case Indigo:
+                setTheme(R.style.IndigoTheme);
+                break;
+            case LightGreen:
+                setTheme(R.style.LightGreenTheme);
+                break;
+            case Lime:
+                setTheme(R.style.LimeTheme);
+                break;
+            case DeepOrange:
+                setTheme(R.style.DeepOrangeTheme);
+                break;
+            case Cyan:
+                setTheme(R.style.CyanTheme);
+                break;
+            case BlueGrey:
+                setTheme(R.style.BlueGreyTheme);
+                break;
+        }
+
+    }
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
+
+    protected String getName() {
+        return BaseActivity.class.getName();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //取消请求
+        RequestManager.cancelRequest(getName());
     }
 }

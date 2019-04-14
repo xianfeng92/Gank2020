@@ -4,7 +4,6 @@ import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.OnLifecycleEvent;
-
 import com.xforg.g2020.integration.IRepositoryManager;
 
 /**
@@ -13,6 +12,7 @@ import com.xforg.g2020.integration.IRepositoryManager;
  * ================================================
  */
 public class BaseModel implements IModel, LifecycleObserver {
+
     protected IRepositoryManager mRepositoryManager;//用于管理网络请求层, 以及数据缓存层
 
     public BaseModel(IRepositoryManager repositoryManager) {
