@@ -16,6 +16,8 @@ import com.xforg.g2020.utils.Preconditions;
  */
 public class BaseApplication extends Application implements App {
 
+    public static Context context;
+
     private AppLifecycles mAppDelegate;
 
     /**
@@ -30,6 +32,7 @@ public class BaseApplication extends Application implements App {
         if (mAppDelegate == null)
             this.mAppDelegate = new AppDelegate(base);
         this.mAppDelegate.attachBaseContext(base);
+        context = base;
     }
 
     @Override
@@ -61,5 +64,9 @@ public class BaseApplication extends Application implements App {
         Preconditions.checkNotNull(mAppDelegate, "%s cannot be null", AppDelegate.class.getName());
         Preconditions.checkState(mAppDelegate instanceof App, "%s must be implements %s", mAppDelegate.getClass().getName(), App.class.getName());
         return ((App) mAppDelegate).getAppComponent();
+    }
+
+    public static Context getContext(){
+        return context;
     }
 }

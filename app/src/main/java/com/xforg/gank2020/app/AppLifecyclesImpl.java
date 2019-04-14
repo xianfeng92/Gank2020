@@ -4,8 +4,12 @@ package com.xforg.gank2020.app;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
+
+import com.orhanobut.logger.LogLevel;
+import com.orhanobut.logger.Logger;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import com.xforg.g2020.BuildConfig;
 import com.xforg.g2020.base.delegate.AppLifecycles;
 import com.xforg.g2020.integration.cache.IntelligentCache;
 import com.xforg.g2020.utils.ArmsUtils;
@@ -37,6 +41,11 @@ public class AppLifecyclesImpl implements AppLifecycles {
         ArmsUtils.obtainAppComponentFromContext(application).extras()
                 .put(IntelligentCache.getKeyOfKeep(RefWatcher.class.getName())
                         , true ? LeakCanary.install(application) : RefWatcher.DISABLED);
+        Logger.init("hhh")
+                .methodOffset(2)
+                .methodCount(2)
+                .hideThreadInfo()
+                .logLevel(BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE);
     }
 
     @Override
