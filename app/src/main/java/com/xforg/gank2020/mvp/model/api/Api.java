@@ -10,6 +10,6 @@ package com.xforg.gank2020.mvp.model.api;
  * ================================================
  */
 public interface Api {
-    String APP_DOMAIN = "https://api.github.com";
+    String APP_DOMAIN = "https://gank.io/api/";
     String RequestSuccess = "0";
 }

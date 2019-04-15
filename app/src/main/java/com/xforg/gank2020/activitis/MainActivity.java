@@ -33,9 +33,9 @@ import com.xforg.g2020.base.BaseActivity;
 import com.xforg.gank2020.R;
 import com.xforg.gank2020.beans.GanHuo;
 import com.xforg.gank2020.event.SkinChangeEvent;
-import com.xforg.gank2020.fragment.AllFragment;
-import com.xforg.gank2020.fragment.CommonFragment;
-import com.xforg.gank2020.fragment.FuLiFragment;
+import com.xforg.gank2020.fragment.GAllFrament;
+import com.xforg.gank2020.fragment.GCommonFragment;
+import com.xforg.gank2020.fragment.GFuLiFragment;
 import com.xforg.gank2020.theme.ColorRelativeLayout;
 import com.xforg.gank2020.theme.ColorUiUtil;
 import com.xforg.gank2020.theme.ColorView;
@@ -185,11 +185,11 @@ public class MainActivity extends AppCompatActivity implements ColorChooserDialo
 
         if (foundFragment == null) {
             if (name.equals("all")){
-                foundFragment = new AllFragment();
+                foundFragment = new GAllFrament();
             }else if (name.equals("福利")){
-                foundFragment = new FuLiFragment();
+                foundFragment = new GFuLiFragment();
             }else {
-                foundFragment = CommonFragment.newInstance(name);
+                foundFragment = GCommonFragment.newInstance(name);
             }
         }
 

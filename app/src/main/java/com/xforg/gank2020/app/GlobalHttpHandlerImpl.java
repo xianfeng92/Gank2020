@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import com.xforg.g2020.http.GlobalHttpHandler;
 import com.xforg.g2020.http.log.RequestInterceptor;
 import com.xforg.g2020.utils.ArmsUtils;
-import com.xforg.gank2020.mvp.model.entity.User;
+import com.xforg.gank2020.beans.GanHuoList;
 import java.util.List;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -41,9 +41,9 @@ public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
     public Response onHttpResultResponse(@Nullable String httpResult, @NonNull Interceptor.Chain chain, @NonNull Response response) {
         if (!TextUtils.isEmpty(httpResult) && RequestInterceptor.isJson(response.body().contentType())) {
             try {
-                List<User> list = ArmsUtils.obtainAppComponentFromContext(context).gson().fromJson(httpResult, new TypeToken<List<User>>() {
+                List<GanHuoList.ResultsBean> list = ArmsUtils.obtainAppComponentFromContext(context).gson().fromJson(httpResult, new TypeToken<List<GanHuoList.ResultsBean>>() {
                 }.getType());
-                User user = list.get(0);
+                GanHuoList.ResultsBean user = list.get(0);
             } catch (Exception e) {
                 e.printStackTrace();
                 return response;

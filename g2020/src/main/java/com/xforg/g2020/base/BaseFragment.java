@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.xforg.g2020.base.delegate.IFragment;
 import com.xforg.g2020.integration.cache.Cache;
@@ -16,9 +15,7 @@ import com.xforg.g2020.integration.cache.CacheType;
 import com.xforg.g2020.integration.lifecycles.FragmentLifecycleable;
 import com.xforg.g2020.mvp.IPresenter;
 import com.xforg.g2020.utils.ArmsUtils;
-
 import javax.inject.Inject;
-
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
 

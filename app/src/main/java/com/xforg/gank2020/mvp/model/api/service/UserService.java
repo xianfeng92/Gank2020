@@ -1,11 +1,13 @@
 package com.xforg.gank2020.mvp.model.api.service;
 
+import com.xforg.gank2020.beans.GanHuoList;
 import com.xforg.gank2020.mvp.model.entity.User;
 import java.util.List;
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -20,4 +22,7 @@ public interface UserService {
     @Headers({HEADER_API_VERSION})
     @GET("/users")
     Observable<List<User>> getUsers(@Query("per_page") int perPage);
+
+    @GET("data/{type}/{pageSize}/{page}")
+    Observable<GanHuoList> getGanHuoList(@Path("type") String type, @Path("pageSize") int pageSize,@Path("page") int page);
 }
