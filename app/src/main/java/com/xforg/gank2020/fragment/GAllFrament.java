@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,18 +60,14 @@ public class GAllFrament extends BaseFragment<CommonPresenter> implements OnRefr
     private static final String TAG = "GAllFrament";
     private String type = "all";
 
-    @BindView(R.id.swipe_target)
     protected RecyclerView mRecyclerView;
-    @BindView(R.id.content_view)
     SwipeToLoadLayout mSwipeToLoadLayout;
-    @BindView(R.id.multipleStatusView)
     MultipleStatusView mMultipleStatusView;
     protected CommonAdapter<GanHuoList.ResultsBean> commonAdapter;
     protected HeaderAndFooterWrapper headerAndFooterWrapper;
     protected List<GanHuoList.ResultsBean> list = new ArrayList<>();
-    protected HashMap<String, String> map = new HashMap<>();
     protected int page = 1;
-    protected int pageSize = 30;
+    protected int pageSize = 10;
     protected String tag = UUID.randomUUID().toString();
     private View view;
     protected OffsetDecoration decoration = new OffsetDecoration();
@@ -82,9 +79,11 @@ public class GAllFrament extends BaseFragment<CommonPresenter> implements OnRefr
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: ");
         view = inflater.inflate(R.layout.fragment_base_list,container,false);
-        ButterKnife.bind(this,view);
-        initViews();
+        mRecyclerView = view.findViewById(R.id.swipe_target);
+        mSwipeToLoadLayout = view.findViewById(R.id.content_view);
+        mMultipleStatusView = view.findViewById(R.id.multipleStatusView);
         return view;
     }
 
@@ -115,11 +114,14 @@ public class GAllFrament extends BaseFragment<CommonPresenter> implements OnRefr
 
     @Override
     public View initView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "initView: ");
         return view;
     }
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "initData: ");
+        initViews();
     }
 
     @Override
@@ -132,7 +134,14 @@ public class GAllFrament extends BaseFragment<CommonPresenter> implements OnRefr
         super.onDestroyView();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData(true);
+    }
+
     private void initViews() {
+        Log.d(TAG, "initViews: ");
         mSwipeToLoadLayout.setOnRefreshListener(this);
         mSwipeToLoadLayout.setOnLoadMoreListener(this);
         mMultipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
@@ -141,11 +150,12 @@ public class GAllFrament extends BaseFragment<CommonPresenter> implements OnRefr
                 onRefresh();
             }
         });
-        commonAdapter = new CommonAdapter<GanHuoList.ResultsBean>(getActivity(), R.layout.item_common, list) {
+        commonAdapter = new CommonAdapter<GanHuoList.ResultsBean>(mContext, R.layout.item_common, list) {
             @Override
             public void convert(ViewHolder holder, GanHuoList.ResultsBean ganHuo, int position) {
                     ImageView mImage = holder.getView(R.id.image);
                     TextView mText = holder.getView(R.id.text);
+                    Log.d(TAG, "convert: ");
                     if (ganHuo.getType().equals("福利")) {
                         mImage.setVisibility(View.VISIBLE);
                         mText.setVisibility(View.GONE);
@@ -153,7 +163,7 @@ public class GAllFrament extends BaseFragment<CommonPresenter> implements OnRefr
                     } else {
                         mImage.setVisibility(View.GONE);
                         mText.setVisibility(View.VISIBLE);
-                        mText.setLinkTextColor(ThemeUtils.getThemeColor(getActivity(),R.attr.colorPrimary));
+                        mText.setLinkTextColor(ThemeUtils.getThemeColor(mContext,R.attr.colorPrimary));
                         mText.setText(Html.fromHtml("<a href=\""
                                 + ganHuo.getUrl() + "\">"
                                 + ganHuo.getDesc() + "</a>"
@@ -198,6 +208,7 @@ public class GAllFrament extends BaseFragment<CommonPresenter> implements OnRefr
     }
 
     private void getData(final boolean isRefresh) {
+        Log.d(TAG, "getData: ");
         repositoryManager.obtainRetrofitService(UserService.class)
                 .getGanHuoList(type,pageSize,page)
                 .subscribeOn(Schedulers.io())

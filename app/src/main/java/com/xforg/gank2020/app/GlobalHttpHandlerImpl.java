@@ -39,16 +39,16 @@ public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
     @NonNull
     @Override
     public Response onHttpResultResponse(@Nullable String httpResult, @NonNull Interceptor.Chain chain, @NonNull Response response) {
-        if (!TextUtils.isEmpty(httpResult) && RequestInterceptor.isJson(response.body().contentType())) {
-            try {
-                List<GanHuoList.ResultsBean> list = ArmsUtils.obtainAppComponentFromContext(context).gson().fromJson(httpResult, new TypeToken<List<GanHuoList.ResultsBean>>() {
-                }.getType());
-                GanHuoList.ResultsBean user = list.get(0);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return response;
-            }
-        }
+//        if (!TextUtils.isEmpty(httpResult) && RequestInterceptor.isJson(response.body().contentType())) {
+//            try {
+//                List<GanHuoList.ResultsBean> list = ArmsUtils.obtainAppComponentFromContext(context).gson().fromJson(httpResult, new TypeToken<List<GanHuoList.ResultsBean>>() {
+//                }.getType());
+//                GanHuoList.ResultsBean user = list.get(0);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return response;
+//            }
+//        }
 
         /* 这里如果发现 token 过期, 可以先请求最新的 token, 然后在拿新的 token 放入 Request 里去重新请求
         注意在这个回调之前已经调用过 proceed(), 所以这里必须自己去建立网络请求, 如使用 Okhttp 使用新的 Request 去请求

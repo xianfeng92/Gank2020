@@ -23,12 +23,12 @@ public class GanHuoList {
          * who : 代码家
          */
 
-        private String id;
-        private String createdAt;
-        private String desc;
-        private String type;
-        private String url;
-        private String who;
+        public String _id;
+        public String createdAt;
+        public String desc;
+        public String type;
+        public String url;
+        public String who;
 
         public String getWho() {
             return who;
@@ -71,11 +71,11 @@ public class GanHuoList {
         }
 
         public String getId() {
-            return id;
+            return _id;
         }
 
         public void setId(String id) {
-            this.id = id;
+            this._id = id;
         }
     }
 

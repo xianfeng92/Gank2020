@@ -9,10 +9,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -30,8 +31,8 @@ import com.mikepenz.iconics.typeface.IIcon;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.squareup.picasso.Picasso;
 import com.xforg.g2020.base.BaseActivity;
+import com.xforg.g2020.di.component.AppComponent;
 import com.xforg.gank2020.R;
-import com.xforg.gank2020.beans.GanHuo;
 import com.xforg.gank2020.event.SkinChangeEvent;
 import com.xforg.gank2020.fragment.GAllFrament;
 import com.xforg.gank2020.fragment.GCommonFragment;
@@ -45,16 +46,14 @@ import com.xforg.gank2020.utils.PreUtils;
 import com.xforg.gank2020.utils.SystemUtils;
 import com.xforg.gank2020.utils.ThemeUtils;
 import com.xforg.gank2020.widget.ResideLayout;
-import com.xforg.http.CallBack;
-import com.xforg.http.RequestManager;
 import org.greenrobot.eventbus.EventBus;
-import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class MainActivity extends AppCompatActivity implements ColorChooserDialog.ColorCallback {
+public class MainActivity extends BaseActivity implements ColorChooserDialog.ColorCallback {
+    private static final String TAG = "MainActivity";
 
     @BindView(R.id.avatar)
     ImageView mAvatar;
@@ -89,12 +88,12 @@ public class MainActivity extends AppCompatActivity implements ColorChooserDialo
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: ");
         onPreCreate();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatus(true);
         }
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         fragmentManager = getSupportFragmentManager();
 
@@ -129,35 +128,16 @@ public class MainActivity extends AppCompatActivity implements ColorChooserDialo
                         .sizeDp(75))
                 .transform(new CropCircleTransformation())
                 .into(mAvatar);
-
-        RequestManager.get(getName(), "http://gank.io/api/data/休息视频/1/1", true, new CallBack<List<GanHuo>>() {
-            @Override
-            public void onSuccess(List<GanHuo> result) {
-                mDesc.setText(result.get(0).getDesc());
-            }
-        });
-
-        RequestManager.get(getName(), "http://gank.io/api/data/福利/1/1", true, new CallBack<List<GanHuo>>() {
-            @Override
-            public void onSuccess(List<GanHuo> result) {
-                Picasso.with(MainActivity.this)
-                        .load(result.get(0).getUrl())
-                        .placeholder(new IconicsDrawable(MainActivity.this)
-                                .icon(FoundationIcons.Icon.fou_photo)
-                                .color(Color.GRAY)
-                                .backgroundColor(Color.WHITE)
-                                .roundedCornersDp(40)
-                                .paddingDp(15)
-                                .sizeDp(75))
-                        .transform(new CropCircleTransformation())
-                        .into(mAvatar);
-            }
-        });
-
         mIcon.setImageDrawable(new IconicsDrawable(this).color(Color.WHITE).icon(MaterialDesignIconic.Icon.gmi_view_comfy).sizeDp(20));
         mTitle.setText("干货集中营");
         switchFragment("all");
 
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume: ");
+        super.onResume();
     }
 
     private void setIconDrawable(TextView view, IIcon icon) {
@@ -171,13 +151,17 @@ public class MainActivity extends AppCompatActivity implements ColorChooserDialo
 
 
     public void switchFragment(String name) {
-        if (currentFragmentTag != null && currentFragmentTag.equals(name))
+        Log.d(TAG, "switchFragment: "+name);
+        if (currentFragmentTag != null && currentFragmentTag.equals(name)){
+            Log.d(TAG, "switchFragment: return");
             return;
+        }
 
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         Fragment currentFragment = fragmentManager.findFragmentByTag(currentFragmentTag);
         if (currentFragment != null) {
+            Log.d(TAG, "switchFragment: hide"+currentFragmentTag);
             ft.hide(currentFragment);
         }
 
@@ -185,10 +169,13 @@ public class MainActivity extends AppCompatActivity implements ColorChooserDialo
 
         if (foundFragment == null) {
             if (name.equals("all")){
+                Log.d(TAG, "switchFragment: all");
                 foundFragment = new GAllFrament();
             }else if (name.equals("福利")){
+                Log.d(TAG, "switchFragment: fuli");
                 foundFragment = new GFuLiFragment();
             }else {
+                Log.d(TAG, "switchFragment: common");
                 foundFragment = GCommonFragment.newInstance(name);
             }
         }
@@ -480,7 +467,20 @@ public class MainActivity extends AppCompatActivity implements ColorChooserDialo
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //取消请求
-        RequestManager.cancelRequest(getName());
+    }
+
+    @Override
+    public void setupActivityComponent(@NonNull AppComponent appComponent) {
+
+    }
+
+    @Override
+    public int initView(@Nullable Bundle savedInstanceState) {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    public void initData(@Nullable Bundle savedInstanceState) {
+
     }
 }

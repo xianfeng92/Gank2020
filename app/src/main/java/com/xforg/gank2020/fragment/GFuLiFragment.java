@@ -27,17 +27,10 @@ import com.xforg.gank2020.di.component.DaggerAllFragmentComponent;
 import com.xforg.gank2020.mvp.model.api.service.UserService;
 import com.xforg.gank2020.mvp.presenter.CommonPresenter;
 import com.xforg.gank2020.widget.MultipleStatusView;
-import com.xforg.http.RequestManager;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-
 import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -49,21 +42,18 @@ import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
  * github: https://github.com/xianfeng92
  */
 public class GFuLiFragment extends BaseFragment<CommonPresenter> implements OnRefreshListener, OnLoadMoreListener {
+    private static final String TAG = "GFuLiFragment";
 
     String type = "福利";
 
-    @BindView(R.id.swipe_target)
     protected RecyclerView mRecyclerView;
-    @BindView(R.id.content_view)
     SwipeToLoadLayout mSwipeToLoadLayout;
-    @BindView(R.id.multipleStatusView)
     MultipleStatusView mMultipleStatusView;
     protected CommonAdapter<GanHuoList.ResultsBean> commonAdapter;
     protected HeaderAndFooterWrapper headerAndFooterWrapper;
     protected List<GanHuoList.ResultsBean> list = new ArrayList<>();
-    protected HashMap<String, String> map = new HashMap<>();
     protected int page = 1;
-    protected int pageSize = 30;
+    protected int pageSize = 10;
     private View view;
     protected String tag = UUID.randomUUID().toString();
 
@@ -80,11 +70,17 @@ public class GFuLiFragment extends BaseFragment<CommonPresenter> implements OnRe
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_base_list,container,false);
-        ButterKnife.bind(this,view);
+        mRecyclerView = view.findViewById(R.id.swipe_target);
+        mSwipeToLoadLayout = view.findViewById(R.id.content_view);
+        mMultipleStatusView = view.findViewById(R.id.multipleStatusView);
         initViews();
         return view;
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData(true);
+    }
 
     private void initViews() {
         mSwipeToLoadLayout.setOnRefreshListener(this);
@@ -95,14 +91,15 @@ public class GFuLiFragment extends BaseFragment<CommonPresenter> implements OnRe
                 onRefresh();
             }
         });
-        commonAdapter = new CommonAdapter<GanHuoList.ResultsBean>(getActivity(), R.layout.item_fuli, list) {
+        commonAdapter = new CommonAdapter<GanHuoList.ResultsBean>(mContext, R.layout.item_fuli, list) {
             @Override
             public void convert(ViewHolder holder,GanHuoList.ResultsBean ganHuo, int position) {
+                Log.d(TAG, "convert: ");
                 ImageView mImage = holder.getView(R.id.image);
                 Picasso.with(getContext()).load(ganHuo.getUrl()).placeholder(R.mipmap.avatar).into(mImage);
             }
         };
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setHasFixedSize(false);
         headerAndFooterWrapper = new HeaderAndFooterWrapper(commonAdapter);
         SlideInBottomAnimationAdapter slideInBottomAnimationAdapter = new SlideInBottomAnimationAdapter(headerAndFooterWrapper);
@@ -133,12 +130,14 @@ public class GFuLiFragment extends BaseFragment<CommonPresenter> implements OnRe
 
                     @Override
                     public void onNext(GanHuoList resultsBeans) {
+                        Log.d(TAG, "onNext: ");
                         list.addAll(resultsBeans.results);
                         commonAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.d(TAG, "onError: "+e.getMessage());
                     }
 
                     @Override
@@ -153,7 +152,6 @@ public class GFuLiFragment extends BaseFragment<CommonPresenter> implements OnRe
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        RequestManager.cancelRequest(tag);
         view = null;
     }
 

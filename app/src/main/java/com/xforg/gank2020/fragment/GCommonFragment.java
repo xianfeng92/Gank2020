@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,18 +50,16 @@ import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
  */
 public class GCommonFragment extends BaseFragment<CommonPresenter> implements OnRefreshListener, OnLoadMoreListener {
 
-    @BindView(R.id.swipe_target)
+    private static final String TAG = "GCommonFragment";
+
     protected RecyclerView mRecyclerView;
-    @BindView(R.id.content_view)
     SwipeToLoadLayout mSwipeToLoadLayout;
-    @BindView(R.id.multipleStatusView)
     MultipleStatusView mMultipleStatusView;
     protected CommonAdapter<GanHuoList.ResultsBean> commonAdapter;
     protected HeaderAndFooterWrapper headerAndFooterWrapper;
     protected List<GanHuoList.ResultsBean> list = new ArrayList<>();
-    protected HashMap<String, String> map = new HashMap<>();
     protected int page = 1;
-    protected int pageSize = 30;
+    protected int pageSize = 10;
     private String type;
     public static final String ARG_TYPE = "type";
     private View view;
@@ -87,17 +86,21 @@ public class GCommonFragment extends BaseFragment<CommonPresenter> implements On
         super.onCreate(savedInstanceState);
     }
 
-    protected void setLoadMoreEnabled(boolean enable) {
-        mSwipeToLoadLayout.setLoadMoreEnabled(enable);
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_base_list,container,false);
-        ButterKnife.bind(this,view);
+        mRecyclerView = view.findViewById(R.id.swipe_target);
+        mSwipeToLoadLayout = view.findViewById(R.id.content_view);
+        mMultipleStatusView = view.findViewById(R.id.multipleStatusView);
         initViews();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData(true);
     }
 
 
@@ -110,9 +113,11 @@ public class GCommonFragment extends BaseFragment<CommonPresenter> implements On
                 onRefresh();
             }
         });
-        commonAdapter = new CommonAdapter<GanHuoList.ResultsBean>(getActivity(), R.layout.item_common, list) {
+        Log.d(TAG, "initViews: ");
+        commonAdapter = new CommonAdapter<GanHuoList.ResultsBean>(mContext, R.layout.item_common, list) {
             @Override
             public void convert(ViewHolder holder, GanHuoList.ResultsBean ganHuo, int position) {
+                Log.d(TAG, "convert: ");
                 TextView text = holder.getView(R.id.text);
                 text.setText(Html.fromHtml("<a href=\""
                         + ganHuo.getUrl() + "\">"
@@ -127,7 +132,6 @@ public class GCommonFragment extends BaseFragment<CommonPresenter> implements On
         SlideInBottomAnimationAdapter slideInBottomAnimationAdapter = new SlideInBottomAnimationAdapter(headerAndFooterWrapper);
         slideInBottomAnimationAdapter.setFirstOnly(true);
         mRecyclerView.setAdapter(slideInBottomAnimationAdapter);
-
         mRecyclerView.removeItemDecoration(decoration);
         mRecyclerView.addItemDecoration(decoration);
         onRefresh();
@@ -153,11 +157,15 @@ public class GCommonFragment extends BaseFragment<CommonPresenter> implements On
                     @Override
                     public void onNext(GanHuoList resultsBeans) {
                         list.addAll(resultsBeans.results);
+                        for(GanHuoList.ResultsBean resultsBean:resultsBeans.results){
+                            Log.d(TAG, "onNext: "+resultsBean.url);
+                        }
                         commonAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.d(TAG, "onError: ");
                     }
 
                     @Override
@@ -171,7 +179,7 @@ public class GCommonFragment extends BaseFragment<CommonPresenter> implements On
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        RequestManager.cancelRequest(tag);
+        list.clear();
     }
 
     @Override
